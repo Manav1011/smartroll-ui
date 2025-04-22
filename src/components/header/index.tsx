@@ -49,12 +49,26 @@ const Header = () => {
     <div className="flex items-center gap-2 md:ml-auto">
       {/* Avatar */}
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-semibold text-white shadow-sm">
-        {profile.obj.profile.role === 'teacher'
-          ? profile.obj.teacher_code?.substring(0, 2).toUpperCase()
-          : profile.obj.profile.name
-              ?.split(' ')
-              .map(word => word[0].toUpperCase())
-              .join('')}
+        {(() => {
+          const role = profile?.obj?.profile?.role;
+          if (role === 'teacher') {
+            const code = profile?.obj?.teacher_code;
+            return code ? code.substring(0, 2).toUpperCase() : 'TC';
+          } else {
+            const name = profile?.obj?.profile?.name;
+            if (typeof name === 'string') {
+              const initials = name
+                .split(' ')
+                .filter(Boolean)
+                .map(word => word[0])
+                .join('')
+                .substring(0, 2)
+                .toUpperCase();
+              return initials || 'NA';
+            }
+            return 'NA';
+          }
+        })()}
       </div>
     </div>
   )}
